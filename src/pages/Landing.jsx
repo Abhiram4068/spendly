@@ -16,8 +16,11 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center" style={{ background: C.bg }}>
-      <div className="w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-sm" style={{ background: C.accent }}>
-        <span className="text-white text-3xl font-bold">L</span>
+      <div className="flex items-center justify-center gap-4 mb-6">
+        <div className="w-14 h-14 rounded-xl flex items-center justify-center shadow-sm" style={{ background: C.accent }}>
+          <span className="text-white text-3xl font-bold">S</span>
+        </div>
+        <span className="text-4xl font-bold tracking-tight" style={{ color: C.textPrimary }}>Spendly</span>
       </div>
       
       <h1 className="text-4xl sm:text-5xl font-bold mb-4 tracking-tight" style={{ color: C.textPrimary }}>
