@@ -5,20 +5,27 @@ import TopBar from "./TopBar";
 import Drawer from "./Drawer";
 import AddExpenseModal from "./Modals/AddExpenseModal";
 import AddOwedModal from "./Modals/AddOwedModal";
+import ViewModal from "./Modals/ViewModal";
+import EditModal from "./Modals/EditModal";
+import DeleteConfirmModal from "./Modals/DeleteConfirmModal";
+import { C } from "../utils/constants";
 
 export default function Layout() {
-  const { showExpenseModal, showOwedModal } = useContext(AppContext);
+  const { showExpenseModal, showOwedModal, modalState } = useContext(AppContext);
 
   return (
     <>
       <TopBar />
       <Drawer />
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-5">
+      <main className="max-w-3xl mx-auto px-4 pt-20 pb-8 min-h-screen" style={{ background: C.bg }}>
         <Outlet />
-      </div>
-
+      </main>
+      
       {showExpenseModal && <AddExpenseModal />}
       {showOwedModal && <AddOwedModal />}
+      {modalState === "view" && <ViewModal />}
+      {modalState === "edit" && <EditModal />}
+      {modalState === "delete" && <DeleteConfirmModal />}
     </>
   );
 }

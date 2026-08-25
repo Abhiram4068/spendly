@@ -3,7 +3,7 @@ import { Search, ChevronDown, ArrowUp, ArrowDown } from "lucide-react";
 
 const SORT_OPTIONS = [
   { key: "date", label: "Date" },
-  { key: "rate", label: "Rate" },
+  { key: "rate", label: "Amount" },
   { key: "month", label: "Month" },
 ];
 
