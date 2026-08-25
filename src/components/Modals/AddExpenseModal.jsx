@@ -9,13 +9,13 @@ const inputStyle = { border: `1px solid ${C.borderStrong}`, color: C.textPrimary
 
 export default function AddExpenseModal() {
   const { setShowExpenseModal, addExpense } = useContext(AppContext);
-  const [text, setText] = useState("");
+  const [expenseText, setExpenseText] = useState("");
   const [rate, setRate] = useState("");
   const [date, setDate] = useState(todayISO());
 
   const submit = () => { 
-    if (!text.trim() || !rate) return; 
-    addExpense({ id: Date.now(), text: text.trim(), rate: parseFloat(rate), date }); 
+    if (!expenseText.trim() || !rate) return; 
+    addExpense({ expense_text: expenseText.trim(), rate: parseFloat(rate), date }); 
     setShowExpenseModal(false);
   };
 
@@ -23,11 +23,11 @@ export default function AddExpenseModal() {
     <Modal title="Add expense" onClose={() => setShowExpenseModal(false)}>
       <div className="space-y-3">
         <div><FieldLabel>Expense</FieldLabel>
-          <input value={text} onChange={(e) => setText(e.target.value)} placeholder="e.g. Groceries" className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle} />
+          <input value={expenseText} onChange={(e) => setExpenseText(e.target.value)} placeholder="e.g. Groceries" className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle} />
         </div>
-        <div><FieldLabel>Rate</FieldLabel>
+        <div><FieldLabel>Amount</FieldLabel>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: C.textTertiary, fontFamily: MONO_STACK }}>$</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: C.textTertiary, fontFamily: MONO_STACK }}>₹</span>
             <input value={rate} onChange={(e) => setRate(e.target.value)} type="number" step="0.01" placeholder="0.00" className="w-full rounded-lg pl-6 pr-3 py-2 text-sm outline-none" style={{ ...inputStyle, fontFamily: MONO_STACK }} />
           </div>
         </div>

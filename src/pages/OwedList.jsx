@@ -1,5 +1,6 @@
 import { useState, useContext, useMemo } from "react";
 import { AppContext } from "../context/AppContext";
+import { useAuth } from "../context/AuthContext";
 import { useFilteredSorted, groupByMonth } from "../utils/hooks";
 import { C } from "../utils/constants";
 import { nameOf } from "../utils/helpers";
@@ -10,24 +11,40 @@ import ListRow from "../components/UI/ListRow";
 import StatusPill from "../components/UI/StatusPill";
 
 export default function OwedList({ type, title, icon }) {
-  const { owed, toggleStatus } = useContext(AppContext);
+  const { owed, toggleStatus, usersList, setActiveItem, setItemType, setModalState } = useContext(AppContext);
+  const { user } = useAuth();
+  
+  const openModal = (item, itemType, state) => {
+    setActiveItem(item);
+    setItemType(itemType);
+    setModalState(state);
+  };
   
   const items = useMemo(() => {
-    if (type === "owedToYou") return owed.filter((o) => o.owedBy === "you");
-    return owed.filter((o) => o.owedTo === "you");
-  }, [owed, type]);
+    if (type === "owedToYou") return owed.filter((o) => o.owed_by === user?.id);
+    return owed.filter((o) => o.owed_to === user?.id);
+  }, [owed, type, user]);
 
-  const personLabel = (o) => type === "owedToYou" ? nameOf(o.owedTo) : nameOf(o.owedBy);
+  const personLabel = (o) => type === "owedToYou" ? nameOf(o.owed_to, usersList) : nameOf(o.owed_by, usersList);
 
   const [query, setQuery] = useState("");
-  const [sortKey, setSortKey] = useState("date");
+  const [sortKey, setSortKey] = useState("month");
   const [sortDir, setSortDir] = useState("desc");
   
   const filtered = useFilteredSorted(items, query, sortKey, sortDir);
   const groups = sortKey === "month" ? groupByMonth(filtered) : null;
 
   const row = (o) => (
-    <ListRow key={o.id} text={`${o.text} · ${personLabel(o)}`} date={o.date} rate={o.rate} right={<StatusPill status={o.status} onToggle={() => toggleStatus(o.id)} />} />
+    <ListRow 
+      key={o.id} 
+      text={`${o.expense_text} · ${personLabel(o)}`} 
+      date={o.expense_date} 
+      rate={o.rate} 
+      right={<StatusPill status={o.status} onToggle={() => toggleStatus(o.id)} />} 
+      onView={() => openModal(o, "owed", "view")}
+      onEdit={() => openModal(o, "owed", "edit")}
+      onDelete={() => openModal(o, "owed", "delete")}
+    />
   );
 
   return (

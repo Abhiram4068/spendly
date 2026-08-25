@@ -12,7 +12,7 @@ export default function Money({ value, size = "base", color }) {
       color: color || C.textPrimary, 
       letterSpacing: "-0.01em" 
     }}>
-      ${formatMoney(value)}
+      ₹{formatMoney(value)}
     </span>
   );
 }
