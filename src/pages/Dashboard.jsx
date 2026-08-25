@@ -48,17 +48,21 @@ export default function Dashboard() {
       </div>
 
       <Section icon={<Receipt size={16} />} title="Recent expenses" action={<ViewAll to="/expenses" />}>
-        {expenses.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4).map((e) => (
-          <ListRow 
-            key={e.id} 
-            text={e.expense_text} 
-            date={e.date} 
-            rate={e.rate} 
-            onView={() => openModal(e, "expense", "view")}
-            onEdit={() => openModal(e, "expense", "edit")}
-            onDelete={() => openModal(e, "expense", "delete")}
-          />
-        ))}
+        {expenses.length === 0 ? (
+          <EmptyState label="You haven't added any expenses yet." />
+        ) : (
+          expenses.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4).map((e) => (
+            <ListRow 
+              key={e.id} 
+              text={e.expense_text} 
+              date={e.date} 
+              rate={e.rate} 
+              onView={() => openModal(e, "expense", "view")}
+              onEdit={() => openModal(e, "expense", "edit")}
+              onDelete={() => openModal(e, "expense", "delete")}
+            />
+          ))
+        )}
       </Section>
 
       <Section icon={<HandCoins size={16} />} title="Owed to you" action={<ViewAll to="/owed-to-you" />}>
