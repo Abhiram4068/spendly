@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import TopBar from "./TopBar";
 import Drawer from "./Drawer";
+import AddBalanceModal from "./Modals/AddBalanceModal";
 import AddExpenseModal from "./Modals/AddExpenseModal";
 import AddOwedModal from "./Modals/AddOwedModal";
 import ViewModal from "./Modals/ViewModal";
@@ -11,7 +12,7 @@ import DeleteConfirmModal from "./Modals/DeleteConfirmModal";
 import { C } from "../utils/constants";
 
 export default function Layout() {
-  const { showExpenseModal, showOwedModal, modalState } = useContext(AppContext);
+  const { showBalanceModal, showExpenseModal, showOwedModal, modalState } = useContext(AppContext);
 
   return (
     <>
@@ -21,6 +22,7 @@ export default function Layout() {
         <Outlet />
       </main>
       
+      {showBalanceModal && <AddBalanceModal />}
       {showExpenseModal && <AddExpenseModal />}
       {showOwedModal && <AddOwedModal />}
       {modalState === "view" && <ViewModal />}
