@@ -9,10 +9,10 @@ import ListRow from "../components/UI/ListRow";
 import StatusPill from "../components/UI/StatusPill";
 import EmptyState from "../components/UI/EmptyState";
 import { C } from "../utils/constants";
-import { Receipt, HandCoins } from "lucide-react";
+import { Receipt, HandCoins, Plus } from "lucide-react";
 
 export default function Dashboard() {
-  const { expenses, owed, usersList, setActiveItem, setItemType, setModalState } = useContext(AppContext);
+  const { expenses, owed, usersList, userProfile, setShowBalanceModal, setActiveItem, setItemType, setModalState } = useContext(AppContext);
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -41,7 +41,20 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <SummaryCard 
+          label="Current balance" 
+          value={userProfile?.balance || 0} 
+          action={
+            <button 
+              onClick={() => setShowBalanceModal(true)} 
+              className="p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+              title="Add Balance"
+            >
+              <Plus size={14} style={{ color: C.textSecondary }} />
+            </button>
+          }
+        />
         <SummaryCard label="Total expenses this month" value={totalThisMonth} sublabel={`${expenses.length} entries`} />
         <SummaryCard label="Owed to you" value={totalOwedToYou} tone="accent" sublabel="pending only" />
         <SummaryCard label="Owed by you" value={totalOwedByYou} tone="danger" sublabel="pending only" />

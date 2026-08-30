@@ -16,24 +16,19 @@ export const expenseService = {
   },
 
   addExpense: async (expenseText, rate, date, userId) => {
-    const { data, error } = await supabase
-      .from('expenses')
-      .insert([
-        {
-          expense_text: expenseText,
-          rate,
-          date,
-          user_id: userId
-        }
-      ])
-      .select()
-      .single()
+    // Call the RPC you created instead of direct insert.
+    // The RPC automatically grabs the user's ID via auth.uid()
+    const { data, error } = await supabase.rpc('create_expense', {
+      p_expense_text: expenseText,
+      p_rate: rate,
+      p_date: date
+    });
 
     if (error) {
-      console.error("Error adding expense:", error)
-      throw error
+      console.error("Error adding expense via RPC:", error);
+      throw error;
     }
-    return data
+    return data;
   },
 
   updateExpense: async (id, updates) => {
