@@ -24,16 +24,16 @@ export default function TopBar() {
         <span className="font-semibold text-base hidden sm:inline" style={{ color: C.textPrimary }}>Spendly</span>
       </div>
 
-      <div className="flex items-center gap-2 sm:gap-4">
+      <div className="flex items-center gap-2 sm:gap-4 min-w-0">
         {userProfile && (
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg mr-1" style={{ background: C.bg }}>
-            <Wallet size={14} style={{ color: C.textTertiary }} />
-            <span className="font-semibold text-sm" style={{ color: C.textPrimary, fontFamily: MONO_STACK }}>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg mr-1 min-w-0" style={{ background: C.bg }}>
+            <Wallet size={14} className="shrink-0" style={{ color: C.textTertiary }} />
+            <span className="font-semibold text-sm truncate max-w-[80px] sm:max-w-none" style={{ color: C.textPrimary, fontFamily: MONO_STACK }}>
               ₹{formatMoney(userProfile.balance)}
             </span>
             <button 
               onClick={() => setShowBalanceModal(true)} 
-              className="p-0.5 ml-1 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+              className="p-0.5 ml-1 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors shrink-0"
             >
               <Plus size={14} style={{ color: C.textSecondary }} />
             </button>

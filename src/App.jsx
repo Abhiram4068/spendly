@@ -1,6 +1,6 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AppProvider } from "./context/AppContext";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import ExpenseList from "./pages/ExpenseList";
@@ -35,10 +35,18 @@ export default function App() {
                   <Route path="/owed-by-you" element={<OwedList type="owedByYou" title="Owed by you" icon={<Wallet size={16} />} />} />
                 </Route>
               </Route>
+              
+              {/* Catch-all Route */}
+              <Route path="*" element={<CatchAll />} />
             </Routes>
           </BrowserRouter>
         </AppProvider>
       </AuthProvider>
     </div>
   );
+}
+
+function CatchAll() {
+  const { user } = useAuth();
+  return <Navigate to={user ? "/dashboard" : "/"} replace />;
 }

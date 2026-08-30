@@ -8,9 +8,10 @@ import { X, Plus, HandCoins, LayoutDashboard, Receipt, Wallet, LogOut, BarChart3
 const NAV_ITEMS = [
   { key: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { key: "/expenses", label: "My Expenses", icon: Receipt },
-  { key: "/insights", label: "Logs & Insights", icon: BarChart3 },
+
   { key: "/owed-to-you", label: "Owed to You", icon: HandCoins },
   { key: "/owed-by-you", label: "Owed by You", icon: Wallet },
+    { key: "/insights", label: "Logs & Insights", icon: BarChart3 }
 ];
 
 export default function Drawer() {
