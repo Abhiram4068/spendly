@@ -53,11 +53,17 @@ export function AppProvider({ children }) {
         expenseService.getCategories()
       ]);
       
+      const sortedCategories = [...fetchedCategories].sort((a, b) => {
+        if (a.name.toLowerCase() === 'other') return 1;
+        if (b.name.toLowerCase() === 'other') return -1;
+        return a.name.localeCompare(b.name);
+      });
+
       setExpenses(fetchedExpenses);
       setOwed(fetchedOwed);
       setUsersList(fetchedUsers);
       setUserProfile(fetchedProfile);
-      setCategories(fetchedCategories);
+      setCategories(sortedCategories);
     };
 
     fetchData();

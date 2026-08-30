@@ -38,8 +38,10 @@ export function groupByMonth(items) {
   items.forEach((item) => {
     const dateVal = item.expense_date || item.date;
     const key = new Date(dateVal + "T00:00:00").toLocaleDateString("en-US", { month: "long", year: "numeric" });
-    if (!map.has(key)) { map.set(key, []); order.push(key); }
-    map.get(key).push(item);
+    if (!map.has(key)) { map.set(key, { items: [], total: 0 }); order.push(key); }
+    const group = map.get(key);
+    group.items.push(item);
+    group.total += item.rate || 0;
   });
-  return order.map((label) => ({ label, items: map.get(label) }));
+  return order.map((label) => ({ label, items: map.get(label).items, total: map.get(label).total }));
 }

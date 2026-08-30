@@ -28,7 +28,10 @@ export default function TopBar() {
         {userProfile && (
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg mr-1 min-w-0" style={{ background: C.bg }}>
             <Wallet size={14} className="shrink-0" style={{ color: C.textTertiary }} />
-            <span className="font-semibold text-sm truncate max-w-[80px] sm:max-w-none" style={{ color: C.textPrimary, fontFamily: MONO_STACK }}>
+            <span 
+              className={`font-semibold text-sm ${userProfile.balance > 10000000 ? "truncate max-w-[80px] sm:max-w-none" : ""}`} 
+              style={{ color: C.textPrimary, fontFamily: MONO_STACK }}
+            >
               ₹{formatMoney(userProfile.balance)}
             </span>
             <button 
