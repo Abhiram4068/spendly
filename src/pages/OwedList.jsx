@@ -44,7 +44,7 @@ export default function OwedList({ type, title, icon }) {
       right={<StatusPill status={o.status} onToggle={() => toggleStatus(o.id)} />} 
       onView={() => openModal(o, "owed", "view")}
       onEdit={() => openModal(o, "owed", "edit")}
-      onDelete={() => openModal(o, "owed", "delete")}
+      onDelete={o.owed_by === user?.id ? () => openModal(o, "owed", "delete") : undefined}
     />
   );
 
