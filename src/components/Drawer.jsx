@@ -3,11 +3,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { useAuth } from "../context/AuthContext";
 import { C } from "../utils/constants";
-import { X, Plus, HandCoins, LayoutDashboard, Receipt, Wallet, LogOut } from "lucide-react";
+import { X, Plus, HandCoins, LayoutDashboard, Receipt, Wallet, LogOut, BarChart3 } from "lucide-react";
 
 const NAV_ITEMS = [
   { key: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { key: "/expenses", label: "My Expenses", icon: Receipt },
+  { key: "/insights", label: "Logs & Insights", icon: BarChart3 },
   { key: "/owed-to-you", label: "Owed to You", icon: HandCoins },
   { key: "/owed-by-you", label: "Owed by You", icon: Wallet },
 ];

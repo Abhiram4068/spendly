@@ -33,6 +33,9 @@ export default function ViewModal() {
         
         <div className="border rounded-xl px-4 py-1" style={{ borderColor: C.border }}>
           <InfoRow label="Expense" value={activeItem.expense_text} />
+          {!isOwed && activeItem.categories?.name && (
+            <InfoRow label="Category" value={activeItem.categories.name} />
+          )}
           <InfoRow label="Date" value={new Date((activeItem.expense_date || activeItem.date) + "T00:00:00").toLocaleDateString()} />
           
           {isOwed && (

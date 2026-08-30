@@ -37,7 +37,8 @@ export default function OwedList({ type, title, icon }) {
   const row = (o) => (
     <ListRow 
       key={o.id} 
-      text={`${o.expense_text} · ${personLabel(o)}`} 
+      text={o.expense_text}
+      person={personLabel(o)} 
       date={o.expense_date} 
       rate={o.rate} 
       right={<StatusPill status={o.status} onToggle={() => toggleStatus(o.id)} />} 

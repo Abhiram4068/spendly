@@ -10,6 +10,7 @@ export const AppContext = createContext();
 export function AppProvider({ children }) {
   const { user } = useAuth();
   const [expenses, setExpenses] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [owed, setOwed] = useState([]);
   const [usersList, setUsersList] = useState([]);
   const [userProfile, setUserProfile] = useState(null);
@@ -36,6 +37,7 @@ export function AppProvider({ children }) {
   useEffect(() => {
     if (!user) {
       setExpenses([]);
+      setCategories([]);
       setOwed([]);
       setUsersList([]);
       setUserProfile(null);
@@ -43,25 +45,27 @@ export function AppProvider({ children }) {
     }
 
     const fetchData = async () => {
-      const [fetchedExpenses, fetchedOwed, fetchedUsers, fetchedProfile] = await Promise.all([
+      const [fetchedExpenses, fetchedOwed, fetchedUsers, fetchedProfile, fetchedCategories] = await Promise.all([
         expenseService.getExpensesByUserId(user.id),
         owedService.getOwedForUser(user.id),
         authService.getAllUsers(),
-        getCurrentUserProfile().catch(() => null)
+        getCurrentUserProfile().catch(() => null),
+        expenseService.getCategories()
       ]);
       
       setExpenses(fetchedExpenses);
       setOwed(fetchedOwed);
       setUsersList(fetchedUsers);
       setUserProfile(fetchedProfile);
+      setCategories(fetchedCategories);
     };
 
     fetchData();
   }, [user]);
 
-  const addExpense = async ({ expense_text, rate, date }) => {
+  const addExpense = async ({ expense_text, rate, date, category_id }) => {
     if (!user) return;
-    const newExpense = await expenseService.addExpense(expense_text, rate, date, user.id);
+    const newExpense = await expenseService.addExpense(expense_text, rate, date, category_id, user.id);
     setExpenses((prev) => [newExpense, ...prev]);
     await refreshProfile();
   };
@@ -108,6 +112,7 @@ export function AppProvider({ children }) {
     <AppContext.Provider
       value={{
         expenses,
+        categories,
         owed,
         usersList,
         userProfile,

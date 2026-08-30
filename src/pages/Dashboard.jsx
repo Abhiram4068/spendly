@@ -41,23 +41,27 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <SummaryCard 
-          label="Current balance" 
-          value={userProfile?.balance || 0} 
-          action={
-            <button 
-              onClick={() => setShowBalanceModal(true)} 
-              className="p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-              title="Add Balance"
-            >
-              <Plus size={14} style={{ color: C.textSecondary }} />
-            </button>
-          }
+          label="Total expenses this month" 
+          value={totalThisMonth} 
+          sublabel={`${expenses.length} entries`} 
+          action={<ViewAll to="/expenses" />}
         />
-        <SummaryCard label="Total expenses this month" value={totalThisMonth} sublabel={`${expenses.length} entries`} />
-        <SummaryCard label="Owed to you" value={totalOwedToYou} tone="accent" sublabel="pending only" />
-        <SummaryCard label="Owed by you" value={totalOwedByYou} tone="danger" sublabel="pending only" />
+        <SummaryCard 
+          label="Owed to you" 
+          value={totalOwedToYou} 
+          tone="accent" 
+          sublabel="pending only" 
+          action={<ViewAll to="/owed-to-you" />}
+        />
+        <SummaryCard 
+          label="Owed by you" 
+          value={totalOwedByYou} 
+          tone="danger" 
+          sublabel="pending only" 
+          action={<ViewAll to="/owed-by-you" />}
+        />
       </div>
 
       <Section icon={<Receipt size={16} />} title="Recent expenses" action={<ViewAll to="/expenses" />}>
@@ -84,9 +88,10 @@ export default function Dashboard() {
           : owedToYou.slice(0, 4).map((o) => (
               <ListRow 
                 key={o.id} 
-                text={`${o.expense_text} · ${nameOf(o.owed_to, usersList)}`} 
+                text={o.expense_text} 
                 date={o.expense_date} 
                 rate={o.rate} 
+                person={nameOf(o.owed_to, usersList)}
                 right={<StatusPill status={o.status} onToggle={() => {}} />} 
                 onView={() => openModal(o, "owed", "view")}
                 onEdit={() => openModal(o, "owed", "edit")}

@@ -5,6 +5,7 @@ import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import ExpenseList from "./pages/ExpenseList";
 import OwedList from "./pages/OwedList";
+import Insights from "./pages/Insights";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -29,6 +30,7 @@ export default function App() {
                 <Route element={<Layout />}>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/expenses" element={<ExpenseList />} />
+                  <Route path="/insights" element={<Insights />} />
                   <Route path="/owed-to-you" element={<OwedList type="owedToYou" title="Owed to you" icon={<HandCoins size={16} />} />} />
                   <Route path="/owed-by-you" element={<OwedList type="owedByYou" title="Owed by you" icon={<Wallet size={16} />} />} />
                 </Route>

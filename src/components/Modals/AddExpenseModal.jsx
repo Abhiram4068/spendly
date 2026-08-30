@@ -8,14 +8,18 @@ import { todayISO } from "../../utils/helpers";
 const inputStyle = { border: `1px solid ${C.borderStrong}`, color: C.textPrimary, background: C.surface };
 
 export default function AddExpenseModal() {
-  const { setShowExpenseModal, addExpense, userProfile } = useContext(AppContext);
+  const { setShowExpenseModal, addExpense, userProfile, categories } = useContext(AppContext);
   const [expenseText, setExpenseText] = useState("");
   const [rate, setRate] = useState("");
   const [date, setDate] = useState(todayISO());
+  const [categoryId, setCategoryId] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
   const submit = async () => { 
-    if (!expenseText.trim() || !rate) return; 
+    if (!expenseText.trim() || !rate || !categoryId) {
+      setErrorMsg("Please fill all fields including category.");
+      return;
+    }
     setErrorMsg("");
     
     const amount = parseFloat(rate);
@@ -26,7 +30,7 @@ export default function AddExpenseModal() {
     }
 
     try {
-      await addExpense({ expense_text: expenseText.trim(), rate: amount, date }); 
+      await addExpense({ expense_text: expenseText.trim(), rate: amount, date, category_id: categoryId }); 
       setShowExpenseModal(false);
     } catch (err) {
       setErrorMsg(err.message || "Failed to add expense.");
@@ -49,6 +53,14 @@ export default function AddExpenseModal() {
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: C.textTertiary, fontFamily: MONO_STACK }}>₹</span>
             <input value={rate} onChange={(e) => setRate(e.target.value)} type="number" step="0.01" placeholder="0.00" className="w-full rounded-lg pl-6 pr-3 py-2 text-sm outline-none" style={{ ...inputStyle, fontFamily: MONO_STACK }} />
           </div>
+        </div>
+        <div><FieldLabel>Category</FieldLabel>
+          <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle}>
+            <option value="" disabled>Select a category</option>
+            {categories && categories.map(cat => (
+              <option key={cat.id} value={cat.id}>{cat.name}</option>
+            ))}
+          </select>
         </div>
         <div><FieldLabel>Date</FieldLabel>
           <input value={date} onChange={(e) => setDate(e.target.value)} type="date" className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle} />
