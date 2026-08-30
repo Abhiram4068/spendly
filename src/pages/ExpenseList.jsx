@@ -1,6 +1,7 @@
 import { useState, useContext, useMemo } from "react";
 import { AppContext } from "../context/AppContext";
 import { useFilteredSorted, groupByMonth } from "../utils/hooks";
+import { formatMoney } from "../utils/helpers";
 import { C } from "../utils/constants";
 import Section from "../components/UI/Section";
 import SearchSortBar from "../components/UI/SearchSortBar";
@@ -38,8 +39,12 @@ export default function ExpenseList() {
       {groups
         ? groups.map((g) => (
             <div key={g.label}>
-              <div className="px-4 py-2 text-xs font-semibold" style={{ color: C.textTertiary, background: C.bg }}>
-                {g.label} <span className="ml-1 opacity-80">({g.items.length} {g.items.length === 1 ? "entry" : "entries"})</span>
+              <div className="px-4 py-2 text-xs font-semibold flex items-center justify-between" style={{ background: C.bg }}>
+                <div>
+                  <span style={{ color: C.textTertiary }}>{g.label}</span>
+                  <span className="ml-1 opacity-80" style={{ color: C.textTertiary }}>({g.items.length} {g.items.length === 1 ? "entry" : "entries"})</span>
+                </div>
+                <span className="font-bold text-[13px]" style={{ color: C.textPrimary }}>₹{formatMoney(g.total)}</span>
               </div>
               {g.items.map((e) => (
                 <ListRow 

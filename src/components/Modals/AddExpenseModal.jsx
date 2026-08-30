@@ -37,16 +37,22 @@ export default function AddExpenseModal() {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    document.activeElement?.blur();
+    submit();
+  };
+
   return (
     <Modal title="Add expense" onClose={() => setShowExpenseModal(false)}>
-      <div className="space-y-3">
+      <form onSubmit={handleSubmit} className="space-y-3">
         {errorMsg && (
           <div className="text-red-500 text-sm bg-red-500/10 p-2 rounded border border-red-500/20">
             {errorMsg}
           </div>
         )}
         <div><FieldLabel>Expense</FieldLabel>
-          <input value={expenseText} onChange={(e) => setExpenseText(e.target.value)} placeholder="e.g. Groceries" className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle} />
+          <input value={expenseText} onChange={(e) => setExpenseText(e.target.value)} placeholder="e.g. Milk or Bread" className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle} />
         </div>
         <div><FieldLabel>Amount</FieldLabel>
           <div className="relative">
@@ -65,8 +71,8 @@ export default function AddExpenseModal() {
         <div><FieldLabel>Date</FieldLabel>
           <input value={date} onChange={(e) => setDate(e.target.value)} type="date" className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle} />
         </div>
-        <button onClick={submit} className="w-full rounded-lg py-2.5 text-sm font-medium text-white mt-2 hover:opacity-90 transition-opacity" style={{ background: C.accent }}>Add expense</button>
-      </div>
+        <button type="submit" className="w-full rounded-lg py-2.5 text-sm font-medium text-white mt-2 hover:opacity-90 transition-opacity" style={{ background: C.accent }}>Add expense</button>
+      </form>
     </Modal>
   );
 }

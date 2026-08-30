@@ -57,9 +57,15 @@ export default function EditModal() {
     setModalState(null);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    document.activeElement?.blur();
+    submit();
+  };
+
   return (
     <Modal title={isOwed ? "Edit owed" : "Edit expense"} onClose={() => setModalState(null)}>
-      <div className="space-y-3">
+      <form onSubmit={handleSubmit} className="space-y-3">
         <div><FieldLabel>Expense</FieldLabel>
           <input value={expenseText} onChange={(e) => setExpenseText(e.target.value)} placeholder="e.g. Groceries" className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle} />
         </div>
@@ -100,8 +106,8 @@ export default function EditModal() {
           </>
         )}
 
-        <button onClick={submit} className="w-full rounded-lg py-2.5 text-sm font-medium text-white mt-2" style={{ background: C.accent }}>Save changes</button>
-      </div>
+        <button type="submit" className="w-full rounded-lg py-2.5 text-sm font-medium text-white mt-2 hover:opacity-90 transition-opacity" style={{ background: C.accent }}>Save changes</button>
+      </form>
     </Modal>
   );
 }

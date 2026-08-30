@@ -26,9 +26,15 @@ export default function AddBalanceModal() {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    document.activeElement?.blur();
+    submit();
+  };
+
   return (
     <Modal title="Add Balance" onClose={() => setShowBalanceModal(false)}>
-      <div className="space-y-3">
+      <form onSubmit={handleSubmit} className="space-y-3">
         <div><FieldLabel>Amount to add</FieldLabel>
           <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: C.textTertiary, fontFamily: MONO_STACK }}>₹</span>
@@ -44,14 +50,14 @@ export default function AddBalanceModal() {
           </div>
         </div>
         <button 
-          onClick={submit} 
+          type="submit"
           disabled={loading}
-          className="w-full rounded-lg py-2.5 text-sm font-medium text-white mt-2 disabled:opacity-50" 
+          className="w-full rounded-lg py-2.5 text-sm font-medium text-white mt-2 disabled:opacity-50 hover:opacity-90 transition-opacity" 
           style={{ background: C.accent }}
         >
           {loading ? "Adding..." : "Add balance"}
         </button>
-      </div>
+      </form>
     </Modal>
   );
 }
