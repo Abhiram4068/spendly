@@ -21,6 +21,8 @@ export default function EditModal() {
   const isOwed = itemType === "owed";
   const availableUsers = usersList.filter((u) => u.id !== user?.id);
 
+  const [errorMsg, setErrorMsg] = useState("");
+
   useEffect(() => {
     if (activeItem) {
       setExpenseText(activeItem.expense_text);
@@ -36,7 +38,11 @@ export default function EditModal() {
   if (!activeItem) return null;
 
   const submit = () => {
-    if (!expenseText.trim() || !rate || (isOwed && !otherUser)) return;
+    if (!expenseText.trim() || !rate || (isOwed && !otherUser)) {
+      setErrorMsg("Please fill all required fields.");
+      return;
+    }
+    setErrorMsg("");
     
     if (isOwed) {
       editOwed(activeItem.id, {
@@ -66,6 +72,11 @@ export default function EditModal() {
   return (
     <Modal title={isOwed ? "Edit owed" : "Edit expense"} onClose={() => setModalState(null)}>
       <form onSubmit={handleSubmit} className="space-y-3">
+        {errorMsg && (
+          <div className="text-red-500 text-sm bg-red-500/10 p-2 rounded border border-red-500/20">
+            {errorMsg}
+          </div>
+        )}
         <div><FieldLabel>Expense</FieldLabel>
           <input value={expenseText} onChange={(e) => setExpenseText(e.target.value)} placeholder="e.g. Groceries" className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle} />
         </div>
@@ -106,7 +117,10 @@ export default function EditModal() {
           </>
         )}
 
-        <button type="submit" className="w-full rounded-lg py-2.5 text-sm font-medium text-white mt-2 hover:opacity-90 transition-opacity" style={{ background: C.accent }}>Save changes</button>
+        <div className="flex flex-col gap-2 mt-4">
+          <button type="submit" className="w-full rounded-lg py-2.5 text-sm font-medium text-white hover:opacity-90 transition-opacity" style={{ background: C.accent }}>Save changes</button>
+          <button type="button" onClick={() => setModalState(null)} className="w-full rounded-lg py-2.5 text-sm font-medium transition-opacity" style={{ background: C.bg, color: C.textPrimary, border: `1px solid ${C.borderStrong}` }}>Cancel</button>
+        </div>
       </form>
     </Modal>
   );

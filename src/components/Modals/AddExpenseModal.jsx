@@ -71,7 +71,10 @@ export default function AddExpenseModal() {
         <div><FieldLabel>Date</FieldLabel>
           <input value={date} onChange={(e) => setDate(e.target.value)} type="date" className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle} />
         </div>
-        <button type="submit" className="w-full rounded-lg py-2.5 text-sm font-medium text-white mt-2 hover:opacity-90 transition-opacity" style={{ background: C.accent }}>Add expense</button>
+        <div className="flex flex-col gap-2 mt-4">
+          <button type="submit" className="w-full rounded-lg py-2.5 text-sm font-medium text-white hover:opacity-90 transition-opacity" style={{ background: C.accent }}>Add expense</button>
+          <button type="button" onClick={() => setShowExpenseModal(false)} className="w-full rounded-lg py-2.5 text-sm font-medium transition-opacity" style={{ background: C.bg, color: C.textPrimary, border: `1px solid ${C.borderStrong}` }}>Cancel</button>
+        </div>
       </form>
     </Modal>
   );

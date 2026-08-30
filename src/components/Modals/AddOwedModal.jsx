@@ -20,6 +20,8 @@ export default function AddOwedModal() {
   const [expenseDate, setExpenseDate] = useState(todayISO());
   const [owedTo, setOwedTo] = useState("");
 
+  const [errorMsg, setErrorMsg] = useState("");
+
   useEffect(() => {
     if (availableUsers.length > 0 && !owedTo) {
       setOwedTo(availableUsers[0].id);
@@ -27,7 +29,11 @@ export default function AddOwedModal() {
   }, [availableUsers, owedTo]);
 
   const submit = () => { 
-    if (!expenseText.trim() || !rate || !owedTo) return; 
+    if (!expenseText.trim() || !rate || !owedTo) {
+      setErrorMsg("Please fill all required fields.");
+      return;
+    }
+    setErrorMsg("");
     addOwed({ expense_text: expenseText.trim(), rate: parseFloat(rate), expense_date: expenseDate, owed_to: owedTo }); 
     setShowOwedModal(false);
   };
@@ -41,6 +47,11 @@ export default function AddOwedModal() {
   return (
     <Modal title="Add owed" onClose={() => setShowOwedModal(false)}>
       <form onSubmit={handleSubmit} className="space-y-3">
+        {errorMsg && (
+          <div className="text-red-500 text-sm bg-red-500/10 p-2 rounded border border-red-500/20">
+            {errorMsg}
+          </div>
+        )}
         <div><FieldLabel>Expense</FieldLabel>
           <input value={expenseText} onChange={(e) => setExpenseText(e.target.value)} placeholder="e.g. Dinner split" className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle} />
         </div>
@@ -71,14 +82,24 @@ export default function AddOwedModal() {
             <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: C.textTertiary }} />
           </div>
         </div>
-        <button 
-          type="submit"
-          disabled={availableUsers.length === 0}
-          className="w-full rounded-lg py-2.5 text-sm font-medium text-white mt-2 disabled:opacity-50 hover:opacity-90 transition-opacity" 
-          style={{ background: C.accent }}
-        >
-          Add owed
-        </button>
+        <div className="flex flex-col gap-2 mt-4">
+          <button 
+            type="submit"
+            disabled={availableUsers.length === 0}
+            className="w-full rounded-lg py-2.5 text-sm font-medium text-white disabled:opacity-50 hover:opacity-90 transition-opacity" 
+            style={{ background: C.accent }}
+          >
+            Add owed
+          </button>
+          <button 
+            type="button"
+            onClick={() => setShowOwedModal(false)}
+            className="w-full rounded-lg py-2.5 text-sm font-medium transition-opacity" 
+            style={{ background: C.bg, color: C.textPrimary, border: `1px solid ${C.borderStrong}` }}
+          >
+            Cancel
+          </button>
+        </div>
       </form>
     </Modal>
   );

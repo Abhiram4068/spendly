@@ -86,6 +86,11 @@ export default function Drawer() {
           >
             <LogOut size={15} /> Sign Out
           </button>
+          <div className="mt-4 pb-2 text-center">
+            <span className="text-[11px] font-bold tracking-widest uppercase" style={{ color: C.textTertiary }}>
+              Spendly
+            </span>
+          </div>
         </div>
       </div>
     </div>
