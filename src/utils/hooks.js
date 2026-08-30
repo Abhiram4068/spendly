@@ -1,12 +1,23 @@
 import { useMemo } from "react";
 
-export function useFilteredSorted(items, query, sortKey, sortDir) {
+export function useFilteredSorted(items, query, sortKey, sortDir, filterCategory = "") {
   return useMemo(() => {
     const q = query.trim().toLowerCase();
     
     let out = items.filter((i) => {
+      // First check text match
       const text = i.expense_text || i.text || "";
-      return text.toLowerCase().includes(q);
+      const textMatch = text.toLowerCase().includes(q);
+      if (!textMatch) return false;
+      
+      // Then check category match if filter is set
+      if (filterCategory) {
+        // Handle case where category is an object (from DB join) or a string ID
+        const catId = i.category_id || i.categories?.id;
+        if (catId !== filterCategory) return false;
+      }
+      
+      return true;
     });
     
     const dir = sortDir === "asc" ? 1 : -1;
@@ -18,7 +29,7 @@ export function useFilteredSorted(items, query, sortKey, sortDir) {
       return (dateA - dateB) * dir;
     });
     return out;
-  }, [items, query, sortKey, sortDir]);
+  }, [items, query, sortKey, sortDir, filterCategory]);
 }
 
 export function groupByMonth(items) {

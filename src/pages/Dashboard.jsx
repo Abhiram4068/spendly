@@ -9,10 +9,10 @@ import ListRow from "../components/UI/ListRow";
 import StatusPill from "../components/UI/StatusPill";
 import EmptyState from "../components/UI/EmptyState";
 import { C } from "../utils/constants";
-import { Receipt, HandCoins } from "lucide-react";
+import { Receipt, HandCoins, Plus } from "lucide-react";
 
 export default function Dashboard() {
-  const { expenses, owed, usersList, setActiveItem, setItemType, setModalState } = useContext(AppContext);
+  const { expenses, owed, usersList, userProfile, setShowBalanceModal, setActiveItem, setItemType, setModalState } = useContext(AppContext);
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -41,10 +41,27 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-col sm:flex-row gap-4">
-        <SummaryCard label="Total expenses this month" value={totalThisMonth} sublabel={`${expenses.length} entries`} />
-        <SummaryCard label="Owed to you" value={totalOwedToYou} tone="accent" sublabel="pending only" />
-        <SummaryCard label="Owed by you" value={totalOwedByYou} tone="danger" sublabel="pending only" />
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <SummaryCard 
+          label="Total expenses this month" 
+          value={totalThisMonth} 
+          sublabel={`${expenses.length} entries`} 
+          action={<ViewAll to="/expenses" />}
+        />
+        <SummaryCard 
+          label="Owed to you" 
+          value={totalOwedToYou} 
+          tone="accent" 
+          sublabel="pending only" 
+          action={<ViewAll to="/owed-to-you" />}
+        />
+        <SummaryCard 
+          label="Owed by you" 
+          value={totalOwedByYou} 
+          tone="danger" 
+          sublabel="pending only" 
+          action={<ViewAll to="/owed-by-you" />}
+        />
       </div>
 
       <Section icon={<Receipt size={16} />} title="Recent expenses" action={<ViewAll to="/expenses" />}>
@@ -71,9 +88,10 @@ export default function Dashboard() {
           : owedToYou.slice(0, 4).map((o) => (
               <ListRow 
                 key={o.id} 
-                text={`${o.expense_text} · ${nameOf(o.owed_to, usersList)}`} 
+                text={o.expense_text} 
                 date={o.expense_date} 
                 rate={o.rate} 
+                person={nameOf(o.owed_to, usersList)}
                 right={<StatusPill status={o.status} onToggle={() => {}} />} 
                 onView={() => openModal(o, "owed", "view")}
                 onEdit={() => openModal(o, "owed", "edit")}

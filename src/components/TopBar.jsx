@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import { useAuth } from "../context/AuthContext";
-import { C } from "../utils/constants";
-import { Menu, Plus, HandCoins } from "lucide-react";
+import { C, MONO_STACK } from "../utils/constants";
+import { Menu, Plus, HandCoins, Wallet } from "lucide-react";
+import { formatMoney } from "../utils/helpers";
 
 export default function TopBar() {
-  const { setDrawerOpen, setShowExpenseModal, setShowOwedModal } = useContext(AppContext);
+  const { setDrawerOpen, setShowExpenseModal, setShowOwedModal, userProfile, setShowBalanceModal } = useContext(AppContext);
   const { user } = useAuth();
   
   const username = user?.user_metadata?.username || user?.email?.split('@')[0] || "User";
@@ -17,13 +18,28 @@ export default function TopBar() {
         <button onClick={() => setDrawerOpen(true)} className="p-1 -ml-1 rounded-md" style={{ color: C.textPrimary }}>
           <Menu size={20} />
         </button>
-        <div className="w-7 h-7 rounded-md flex items-center justify-center" style={{ background: C.accent }}>
+        <div className="w-7 h-7 rounded-md flex items-center justify-center hidden sm:flex" style={{ background: C.accent }}>
           <span className="text-white text-sm font-bold">S</span>
         </div>
-        <span className="font-semibold text-base hidden xs:inline" style={{ color: C.textPrimary }}>Spendly</span>
+        <span className="font-semibold text-base hidden sm:inline" style={{ color: C.textPrimary }}>Spendly</span>
       </div>
 
-      <div className="flex items-center gap-2 sm:gap-4">
+      <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+        {userProfile && (
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg mr-1 min-w-0" style={{ background: C.bg }}>
+            <Wallet size={14} className="shrink-0" style={{ color: C.textTertiary }} />
+            <span className="font-semibold text-sm truncate max-w-[80px] sm:max-w-none" style={{ color: C.textPrimary, fontFamily: MONO_STACK }}>
+              ₹{formatMoney(userProfile.balance)}
+            </span>
+            <button 
+              onClick={() => setShowBalanceModal(true)} 
+              className="p-0.5 ml-1 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors shrink-0"
+            >
+              <Plus size={14} style={{ color: C.textSecondary }} />
+            </button>
+          </div>
+        )}
+        
         <div className="flex items-center gap-1.5 sm:gap-2">
           <button onClick={() => setShowOwedModal(true)} className="flex items-center justify-center gap-1.5 rounded-lg w-8 h-8 sm:w-auto sm:px-3 sm:py-2 text-sm font-medium" style={{ background: C.surface, border: `1px solid ${C.borderStrong}`, color: C.textPrimary }}>
             <HandCoins size={15} />

@@ -3,14 +3,18 @@ import { useAuth } from "./AuthContext";
 import { authService } from "../services/authService";
 import { expenseService } from "../services/expenseService";
 import { owedService } from "../services/owedService";
+import { getCurrentUserProfile } from "../services/userService";
 
 export const AppContext = createContext();
 
 export function AppProvider({ children }) {
   const { user } = useAuth();
   const [expenses, setExpenses] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [owed, setOwed] = useState([]);
   const [usersList, setUsersList] = useState([]);
+  const [userProfile, setUserProfile] = useState(null);
+  const [showBalanceModal, setShowBalanceModal] = useState(false);
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showOwedModal, setShowOwedModal] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -19,33 +23,51 @@ export function AppProvider({ children }) {
   const [itemType, setItemType] = useState(null); // 'expense' or 'owed'
   const [modalState, setModalState] = useState(null); // 'view', 'edit', 'delete', or null
 
+  const refreshProfile = async () => {
+    if (user) {
+      try {
+        const profile = await getCurrentUserProfile();
+        setUserProfile(profile);
+      } catch (err) {
+        console.error("Error refreshing profile:", err);
+      }
+    }
+  };
+
   useEffect(() => {
     if (!user) {
       setExpenses([]);
+      setCategories([]);
       setOwed([]);
       setUsersList([]);
+      setUserProfile(null);
       return;
     }
 
     const fetchData = async () => {
-      const [fetchedExpenses, fetchedOwed, fetchedUsers] = await Promise.all([
+      const [fetchedExpenses, fetchedOwed, fetchedUsers, fetchedProfile, fetchedCategories] = await Promise.all([
         expenseService.getExpensesByUserId(user.id),
         owedService.getOwedForUser(user.id),
-        authService.getAllUsers()
+        authService.getAllUsers(),
+        getCurrentUserProfile().catch(() => null),
+        expenseService.getCategories()
       ]);
       
       setExpenses(fetchedExpenses);
       setOwed(fetchedOwed);
       setUsersList(fetchedUsers);
+      setUserProfile(fetchedProfile);
+      setCategories(fetchedCategories);
     };
 
     fetchData();
   }, [user]);
 
-  const addExpense = async ({ expense_text, rate, date }) => {
+  const addExpense = async ({ expense_text, rate, date, category_id }) => {
     if (!user) return;
-    const newExpense = await expenseService.addExpense(expense_text, rate, date, user.id);
+    const newExpense = await expenseService.addExpense(expense_text, rate, date, category_id, user.id);
     setExpenses((prev) => [newExpense, ...prev]);
+    await refreshProfile();
   };
 
   const editExpense = async (id, updates) => {
@@ -90,8 +112,11 @@ export function AppProvider({ children }) {
     <AppContext.Provider
       value={{
         expenses,
+        categories,
         owed,
         usersList,
+        userProfile,
+        refreshProfile,
         addExpense,
         editExpense,
         removeExpense,
@@ -99,6 +124,8 @@ export function AppProvider({ children }) {
         editOwed,
         removeOwed,
         toggleStatus,
+        showBalanceModal,
+        setShowBalanceModal,
         showExpenseModal,
         setShowExpenseModal,
         showOwedModal,
